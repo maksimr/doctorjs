@@ -60,13 +60,14 @@ function usage() {
              "require.paths)")
     util.puts("    -W, --warning level   set log level (debug/info/warn/" +
              "error, default error)");
+    util.puts("        --ignore regex    ignore files matching regex");
     process.exit(1);
 }
 
 var opts;
 try {
     opts = getopt("help|h", "jsonp|j=s", "libroot|L=s@", "oneprog", "output|o|f=s",
-                  "sort|=s", "warning|W=s");
+                  "sort|=s", "warning|W=s", "ignore|=s");
 } catch (e) {
     util.puts(e);
     usage();
@@ -177,6 +178,10 @@ function processPath (p) {
         return; // avoid loops
     }
     idsSeen[id] = true;
+
+    if (opts.ignore && p.match(opts.ignore)) {
+        return;
+    }
 
     var ext = path.extname(p).toLowerCase();
     if (st.isDirectory()) {
