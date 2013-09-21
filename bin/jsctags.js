@@ -172,16 +172,16 @@ function getModuleInfo (fullPath) {
 
 var idsSeen = {};
 function processPath (p) {
+    if (opts.ignore && p.match(opts.ignore)) {
+        return;
+    }
+
     var st = fs.statSync(p);
     var id = idFor(st);
     if (id in idsSeen) {
         return; // avoid loops
     }
     idsSeen[id] = true;
-
-    if (opts.ignore && p.match(opts.ignore)) {
-        return;
-    }
 
     var ext = path.extname(p).toLowerCase();
     if (st.isDirectory()) {
